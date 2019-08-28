@@ -1,10 +1,16 @@
 package com.eben.keeplivedemo;
 
+import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
@@ -18,7 +24,33 @@ public class LocalService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate: ");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel();
+        }
         bindRemoteService();
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private void createNotificationChannel() {
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        String id = "channel_01";
+        CharSequence name ="keep live demo";
+        String description ="keep live demo description";
+        int importance = NotificationManager.IMPORTANCE_MIN;
+        NotificationChannel mChannel = new NotificationChannel(id, name, importance);
+        mChannel.setDescription(description);
+        mChannel.enableLights(true);
+        mChannel.setLightColor(Color.RED);
+        mNotificationManager.createNotificationChannel(mChannel);
+
+        // Create a notification and set the notification channel.
+        Notification notification = new Notification.Builder(this, id)
+                .setContentTitle(name).setContentText(description)
+                .setSmallIcon(null)
+                .setChannelId(id)
+                .build();
+        startForeground(1, notification);
     }
 
     @Override

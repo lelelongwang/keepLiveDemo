@@ -1,6 +1,8 @@
 package com.eben.keeplivedemo;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,8 +26,21 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startService(new Intent(MainActivity.this,LocalService.class));
+                //startService(new Intent(MainActivity.this,LocalService.class));
+                startLocalService();
             }
         });
+    }
+
+    private void startLocalService() {
+        Intent intent = new Intent();
+        ComponentName pageCop = new ComponentName("com.eben.keeplivedemo","com.eben.keeplivedemo.LocalService");
+        intent.setComponent(pageCop);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        } else {
+            startService(intent);
+        }
+
     }
 }
