@@ -24,9 +24,10 @@ public class LocalService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate: ");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNotificationChannel();
-        }
+        //MainActivity中用bindService的话，就不需要用通知了
+        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        //    createNotificationChannel();
+        //}
         bindRemoteService();
     }
 

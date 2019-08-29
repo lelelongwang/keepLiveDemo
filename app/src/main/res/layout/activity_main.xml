@@ -10,6 +10,6 @@
         android:id="@+id/btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="点击开启本地服务"/>
+        android:text="点击模拟主进程crash"/>
 
 </LinearLayout>
