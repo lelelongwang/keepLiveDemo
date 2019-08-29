@@ -20,7 +20,28 @@ import android.view.View;
  * 生成两个apk了。
  * 4、保活总结：https://www.jianshu.com/p/b5371df6d7cb
  * 5、需要监听开机广播让主进程开机自启动
- * 6、可以通过adb shell pkill keeplivedemo，来杀死主进程验证
+ * 6、可以通过adb shell pkill keeplivedemo或者用adb shell kill -9 +进程号，来杀死主进程验证，用第二个命令
+ * 比较准确
+ * 7、如果某个进程没有界面（Activity），则需要在Application中执行“主进程需要绑定LocalService”，这时需要区分
+ * 两个进程的Application，eg：https://blog.csdn.net/LVXIANGAN/article/details/85323004中的方案二：
+ * 7.1、
+ *     public static String getProcessName() {
+ *         try {
+ *             File file = new File("/proc/" + android.os.Process.myPid() + "/" + "cmdline");
+ *             BufferedReader mBufferedReader = new BufferedReader(new FileReader(file));
+ *             String processName = mBufferedReader.readLine().trim();
+ *             mBufferedReader.close();
+ *             return processName;
+ *         } catch (Exception e) {
+ *             e.printStackTrace();
+ *             return null;
+ *         }
+ *     }
+ * 7.2、
+ *     然后在Application中的onCreate()中判断主进程才执行相关操作：
+ *     if(!TextUtils.isEmpty(processName) && processName.equals(this.getPackageName())){
+ *          //判断进程名，保证只有主进程运行，此处为主进程初始化逻辑
+ *     }
  */
 public class MainActivity extends AppCompatActivity {
 
